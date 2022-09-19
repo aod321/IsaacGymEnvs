@@ -1,0 +1,70 @@
+# used to create the object
+name: WFCIsaacTask
+
+# physics_engine: ${..physics_engine}
+physics_engine: physx
+enableCameraSensors: True
+
+
+# if given, will override the device setting in gym.
+env: 
+#  numEnvs: ${...num_envs}
+  numEnvs: ${resolve_default:16,${...num_envs}}
+  envSpacing: 20
+  episodeLength: 500
+  enableDebugVis: False
+  controlFrequencyInv: 1
+  proximity_threshold: 1.5
+  enable_viewer_sync: False
+  max_episode_length: 500
+  randomize: False
+  numAgents: 1
+  numObservations: 16
+  numStates: 0
+  numActions: 7
+  asset_root: "../assets"
+  # set to True if you use camera sensors in the environment
+  enableCameraSensors: True
+
+  plane:
+    staticFriction: 1.0
+    dynamicFriction: 1.0
+    restitution: 0.0
+    distance: 1
+
+sim:
+  dt: 0.0333 # 1/30 s
+  substeps: 2
+  up_axis: "z"
+  use_gpu_pipeline: ${eq:${...pipeline},"gpu"}
+  gravity: [0.0, 0.0, -9.81]
+  physx:
+    num_threads: 0
+    solver_type: 0
+    use_gpu: ${contains:"cuda",${....sim_device}} # set to False to run on CPU
+    num_position_iterations: 4
+    num_velocity_iterations: 0
+
+task:
+  randomize: False
+  wfc_size: 9
+  prefab_size: 2
+  prefab_height: 2
+  height_scale: 0.7
+  agent:
+    density: 1.0
+    fix_base_link: False
+    color: "red"
+    linear_damping: 0.1
+    scale: 0.4
+    camera:
+      width: 84
+      height: 84
+      channel: 4
+      enable_tensors: True
+  food:
+    color: "green"
+    density: 1.0
+    fix_base_link: False
+    linear_damping: 0.1
+    scale: 0.6

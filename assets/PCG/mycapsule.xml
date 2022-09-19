@@ -1,0 +1,12 @@
+<mujoco model="mycapsule">
+   <worldbody>
+      <light name="top" pos="0 0 2" mode="trackcom"/>
+      <body pos="0 0 0">
+         <joint type="hinge" axis="0 0 1"/>
+         <geom type="ellipsoid" size="1 1 0" />
+         <body name="main">
+            <geom type="capsule" size="1 1 1"  pos="0 0 2"/>
+         </body>
+      </body>
+   </worldbody>
+</mujoco>

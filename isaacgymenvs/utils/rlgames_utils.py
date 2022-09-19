@@ -153,7 +153,7 @@ class RLGPUEnv(vecenv.IVecEnv):
         self.env = env_configurations.configurations[config_name]['env_creator'](**kwargs)
 
     def step(self, actions):
-        return  self.env.step(actions)
+        return self.env.step(actions)
 
     def reset(self):
         return self.env.reset()
