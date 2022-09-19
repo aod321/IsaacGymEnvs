@@ -27,7 +27,7 @@ custom_channels:
 conda create --name=issac_rlgames python=3.8
 conda activate issac_rlgames
 conda install pytorch cudatoolkit=11.6 -c pytorch -c conda-forge
-
+..未完待续..
 ```
 
 ## Training Empty aera
