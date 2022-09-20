@@ -265,11 +265,12 @@ class WFCIsaacTask(VecTask):
         food_position = torch.index_select(root_positions, 0, self.food_indexes)
         assert agent_position.shape == food_position.shape, f"agent_posistion:{agent_position.shape}, food_position:{food_position.shape}"
         rewards_buf = torch.zeros(self.num_envs, device=self.device)
+        done_buf = torch.zeros_like(self.reset_buf)
         dist = torch.linalg.norm(agent_position - food_position, dim=1)
         self.rew_buf[:] = torch.where(dist < self.proximity_threshold, torch.ones_like(rewards_buf), rewards_buf)
         # done
         # 1. get reward
-        self.reset_buf[:] = torch.where(self.rew_buf == 1, torch.ones_like(self.reset_buf), self.reset_buf)
+        self.reset_buf[:] = torch.where(self.rew_buf == 1, torch.ones_like(self.reset_buf), done_buf)
         # 2. out area
         self.reset_buf[:] = torch.where(((agent_position<0) + (agent_position - 18 >=0)).sum(dim=1)>0, torch.ones_like(self.reset_buf), self.reset_buf)
         # # 3. in not connected area
@@ -333,7 +334,7 @@ class WFCIsaacTask(VecTask):
             # self.reset_flags[env_ids] = 1
             for env in env_ids:
                 self.wfc_envs[env].placeAgentAndFood_tensor(self.temp_tensor)
-            self.reset_buf[env_ids] = 0
+            # self.reset_buf[env_ids] = 0
             self.progress_buf[env_ids] = 0
 
     def apply_actions(self, in_tensor, in_actions, agent_indexes):
@@ -438,8 +439,8 @@ class WFCIsaacTask(VecTask):
         self.progress_buf += 1
         self.gym.start_access_image_tensors(self.sim)
         self.compute_observations()
-        self.compute_reward()
         self.gym.end_access_image_tensors(self.sim)
+        self.compute_reward()
         # 统计Simulation的FPS
         # end_time = time.time()
         # self.step_count += self.num_envs
